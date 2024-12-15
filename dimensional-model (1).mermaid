@@ -1,0 +1,132 @@
+erDiagram
+    FactCases ||--o{ DimPatient : has
+    FactCases ||--o{ DimDisease : tracks
+    FactCases ||--o{ DimLocation : at
+    FactCases ||--o{ DimDate : on
+    FactCases ||--o{ DimProvider : by
+    FactCases ||--o{ DimFacility : at
+    
+    FactTests ||--o{ DimPatient : involves
+    FactTests ||--o{ DimDisease : for
+    FactTests ||--o{ DimLocation : at
+    FactTests ||--o{ DimDate : on
+    FactTests ||--o{ DimProvider : by
+    FactTests ||--o{ DimFacility : at
+
+    FactOutbreaks ||--o{ DimDisease : of
+    FactOutbreaks ||--o{ DimLocation : in
+    FactOutbreaks ||--o{ DimDate : during
+
+    FactInventory ||--o{ DimFacility : stocks
+    FactInventory ||--o{ DimDate : on
+    
+    DimPatient {
+        PatientKey int PK
+        PatientID int "Natural Key"
+        FirstName varchar
+        LastName varchar
+        DateOfBirth date
+        Gender varchar
+        BloodType varchar
+        AgeGroup varchar
+        RiskCategory varchar
+    }
+
+    DimDisease {
+        DiseaseKey int PK
+        DiseaseID int "Natural Key"
+        DiseaseName varchar
+        Classification varchar
+        IsCommunicable boolean
+        VariantName varchar
+        VariantSeverity varchar
+    }
+
+    DimLocation {
+        LocationKey int PK
+        RegionID int "Natural Key"
+        Country varchar
+        State varchar
+        City varchar
+        Population int
+        PopulationDensity decimal
+    }
+
+    DimDate {
+        DateKey int PK
+        FullDate date
+        Year int
+        Quarter int
+        Month int
+        MonthName varchar
+        Week int
+        DayOfWeek int
+        IsWeekend boolean
+        Season varchar
+    }
+
+    DimProvider {
+        ProviderKey int PK
+        ProviderID int "Natural Key"
+        FullName varchar
+        Specialty varchar
+        YearsOfExperience int
+        IsActive boolean
+    }
+
+    DimFacility {
+        FacilityKey int PK
+        FacilityID int "Natural Key"
+        FacilityName varchar
+        FacilityType varchar
+        Capacity int
+        HasEmergencyRoom boolean
+    }
+
+    FactCases {
+        CaseKey int PK
+        PatientKey int FK
+        DiseaseKey int FK
+        LocationKey int FK
+        DateKey int FK
+        ProviderKey int FK
+        FacilityKey int FK
+        Severity varchar
+        LengthOfStay int
+        Outcome varchar
+        TreatmentCost decimal
+    }
+
+    FactTests {
+        TestKey int PK
+        PatientKey int FK
+        DiseaseKey int FK
+        LocationKey int FK
+        DateKey int FK
+        ProviderKey int FK
+        FacilityKey int FK
+        TestType varchar
+        Result varchar
+        TestCost decimal
+    }
+
+    FactOutbreaks {
+        OutbreakKey int PK
+        DiseaseKey int FK
+        LocationKey int FK
+        StartDateKey int FK
+        EndDateKey int FK
+        TotalCases int
+        MortalityRate decimal
+        EconomicImpact decimal
+    }
+
+    FactInventory {
+        InventoryKey int PK
+        FacilityKey int FK
+        DateKey int FK
+        ResourceType varchar
+        Quantity int
+        Value decimal
+        DaysOfSupply int
+    }
