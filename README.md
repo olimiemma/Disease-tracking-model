@@ -123,10 +123,12 @@ CREATE SCHEMA disease_dw;
 ## Data Model
 
 ### OLTP Schema
-[Include ER Diagram]
+
+![schema](https://github.com/user-attachments/assets/1d142647-d446-4d22-b929-3f1e460e8c05)
 
 ### Data Warehouse Schema
-[Include Star Schema Diagram]
+ Star Schema Diagram
+![Screenshot from 2024-12-14 23-21-44](https://github.com/user-attachments/assets/afc650e0-479b-4f35-8953-f53f467e2d7d)
 
 ## Usage Examples
 
@@ -160,10 +162,11 @@ CREATE SCHEMA disease_dw;
 5. Machine learning integration for outbreak prediction
 
 ## Contributors
-[Team Member Names]
+Emmanuel Olimi K.
+Claude.ai
 
 ## License
-[License Information]
+Copyright (c) 2024 Emmanuel Olimi K.
 
 ## Contact
-[Contact Information]
+[[Linkedin]](https://www.linkedin.com/in/olimiemma/)
