@@ -15,11 +15,12 @@ SELECT
 FROM generate_series(1, 1000) n;
 
 -- Generate Disease Tests (5000 tests across different diseases and patients)
+-- Generate Disease Tests (5000 tests across different diseases and patients)
 INSERT INTO Disease_Test (PatientID, DiseaseID, TestDate, TestType, Result, FacilityID, ProviderID)
 SELECT 
-    floor(random() * 1000 + 1),
-    floor(random() * 5 + 1),
-    '2023-01-01'::date + (random() * 364)::integer,
+    floor(random() * 1000 + 1),  -- PatientID
+    floor(random() * 5 + 1),     -- DiseaseID
+    '2023-01-01'::date + (random() * 364)::integer, -- TestDate
     CASE 
         WHEN random() < 0.5 THEN 'PCR'
         WHEN random() < 0.8 THEN 'Rapid Antigen'
@@ -30,8 +31,8 @@ SELECT
         WHEN random() < 0.9 THEN 'Negative'
         ELSE 'Inconclusive'
     END,
-    floor(random() * 8 + 1),
-    floor(random() * 20 + 1)
+    floor(random() * 8 + 1),     -- FacilityID
+    21 + floor(random() * 20)    -- ProviderID (21-40)
 FROM generate_series(1, 5000) n;
 
 -- Generate Case Records for positive tests

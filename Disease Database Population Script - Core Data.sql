@@ -11,7 +11,7 @@ INSERT INTO Disease_Variant (DiseaseID, Name, FirstIdentified, Characteristics, 
 SELECT 
     1, -- COVID-19
     variant_name,
-    first_identified_date,
+    first_identified_date::DATE,  -- Cast string to DATE
     characteristics,
     transmission_rate,
     severity
@@ -43,18 +43,19 @@ INSERT INTO Healthcare_Facility (Name, RegionID, FacilityType, BedCapacity, ICUC
 -- Healthcare Providers (20 providers across facilities)
 INSERT INTO Healthcare_Provider (FirstName, LastName, Specialty, LicenseNumber, FacilityID, ContactInfo)
 SELECT 
-    'Provider' || n,
-    'LastName' || n,
-    specialty,
-    'LIC' || LPAD(n::text, 5, '0'),
-    facility_id,
-    'contact' || n || '@healthcare.org'
-FROM generate_series(1, 20) n
-CROSS JOIN (
-    SELECT unnest(ARRAY['Infectious Disease', 'Internal Medicine', 'Emergency Medicine', 'Pulmonology', 'General Practice']) AS specialty,
-           unnest(ARRAY[1, 2, 3, 4, 5]) AS facility_id
-) specs
-WHERE n <= 20;
+    'Provider' || id,
+    'LastName' || id,
+    CASE 
+        WHEN id % 5 = 0 THEN 'Infectious Disease'
+        WHEN id % 5 = 1 THEN 'Internal Medicine'
+        WHEN id % 5 = 2 THEN 'Emergency Medicine'
+        WHEN id % 5 = 3 THEN 'Pulmonology'
+        ELSE 'General Practice'
+    END as specialty,
+    'LIC' || LPAD(id::text, 6, '0') as license_number,
+    (id % 5) + 1 as facility_id,
+    'contact' || id || '@healthcare.org'
+FROM generate_series(1, 20) as id;
 
 -- Treatment Protocols
 INSERT INTO Treatment_Protocol (DiseaseID, Name, Description, Medications, Procedures, EffectiveDate, Status) VALUES
