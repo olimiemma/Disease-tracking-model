@@ -162,9 +162,10 @@ CREATE SCHEMA disease_dw;
 5. Machine learning integration for outbreak prediction
 
 ## Contributors
-1.Emmanuel Olimi K.
+1. Emmanuel Olimi K.
+2. Aastik Gautam
+3. Shehbaz Pathan 
 
-2.Claude.ai
 
 ## License
 Copyright (c) 2024 Emmanuel Olimi K.
