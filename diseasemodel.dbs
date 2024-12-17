@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="DiseaseTransactionalModel" database="PostgreSQL" id="PostgreSQL-2274" >
+	<schema name="diseasetransactionalmodel" >
+		<table name="ClinicalTrial" prior="Tbl" >
+			<column name="ClinicalTrialID" type="integer" jt="4" mandatory="y" />
+			<column name="DiseaseID" type="integer" jt="4" >
+				<comment><![CDATA[(Foreign Key to Disease)]]></comment>
+			</column>
+			<column name="Name" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="StartDate" type="date" jt="91" />
+			<column name="EndDate" type="date" jt="91" />
+			<column name="TrialPhase" type="varchar" jt="12" >
+				<comment><![CDATA[(e.g., Phase I, II, III)]]></comment>
+			</column>
+			<column name="LeadResearcher" type="varchar" jt="12" />
+			<column name="FacilityID" type="varchar" jt="12" >
+				<comment><![CDATA[Foreign Key to HealthFacility]]></comment>
+			</column>
+			<column name="ProviderID" type="integer" jt="4" mandatory="y" >
+				<comment><![CDATA[(Primary Key, Integer, Auto-increment)]]></comment>
+			</column>
+			<index name="pk_ClinicalTrial" unique="PRIMARY_KEY" >
+				<column name="ClinicalTrialID" />
+			</index>
+			<index name="unq_ClinicalTrial_DiseaseID" unique="UNIQUE_KEY" >
+				<column name="DiseaseID" />
+			</index>
+			<index name="unq_ClinicalTrial_ProviderID" unique="UNIQUE_KEY" >
+				<column name="ProviderID" />
+			</index>
+		</table>
+		<table name="Disease" prior="Tbl" >
+			<column name="DiseaseID" type="integer" jt="4" mandatory="y" >
+				<comment><![CDATA[(Primary Key, Integer, Auto-increment)]]></comment>
+			</column>
+			<column name="Name" type="varchar" length="100" jt="12" mandatory="y" >
+				<comment><![CDATA[(String, not null)]]></comment>
+			</column>
+			<column name="Classification" type="varchar" jt="12" >
+				<comment><![CDATA[(String, e.g., infectious or non-infectious)]]></comment>
+			</column>
+			<column name="Symptoms" type="varchar" jt="12" >
+				<comment><![CDATA[(String)]]></comment>
+			</column>
+			<column name="SeverityLevel" type="varchar" jt="12" />
+			<column name="ModeOfTransmission" type="varchar" jt="12" />
+			<column name="IncubationPeriod" type="integer" jt="4" >
+				<comment><![CDATA[(Integer, days)]]></comment>
+			</column>
+			<column name="ContagiousPeriod" type="integer" jt="4" >
+				<comment><![CDATA[(Integer, days)]]></comment>
+			</column>
+			<index name="pk_Disease" unique="PRIMARY_KEY" >
+				<column name="DiseaseID" />
+			</index>
+			<fk name="fk_Disease_ClinicalTrial" to_schema="diseasetransactionalmodel" to_table="ClinicalTrial" >
+				<fk_column name="DiseaseID" pk="DiseaseID" />
+			</fk>
+			<fk name="fk_Disease_Symptom" to_schema="diseasetransactionalmodel" to_table="Symptom" >
+				<fk_column name="DiseaseID" pk="DiseaseID" />
+			</fk>
+		</table>
+		<table name="HealthFacility" prior="HealthFacility:" >
+			<column name="FacilityID" type="integer" jt="4" mandatory="y" />
+			<column name="Name" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="Type" type="varchar" jt="12" >
+				<comment><![CDATA[e.g., hospital, clinic, research center]]></comment>
+			</column>
+			<column name="Location" type="varchar" jt="12" >
+				<comment><![CDATA[City, State, Country]]></comment>
+			</column>
+			<index name="pk_HealthFacility" unique="PRIMARY_KEY" >
+				<column name="FacilityID" />
+			</index>
+		</table>
+		<table name="HealthcareProvider" prior="Tbl" >
+			<column name="ProviderID" type="integer" jt="4" mandatory="y" >
+				<comment><![CDATA[(Primary Key, Integer, Auto-increment)]]></comment>
+			</column>
+			<column name="FirstName" type="varchar" length="100" jt="12" mandatory="y" >
+				<comment><![CDATA[(String, not null)]]></comment>
+			</column>
+			<column name="LastName" type="varchar" length="100" jt="12" mandatory="y" >
+				<comment><![CDATA[(String, not null)]]></comment>
+			</column>
+			<column name="Specialty" type="varchar" jt="12" />
+			<column name="LicenseNumber" type="varchar" jt="12" >
+				<comment><![CDATA[(String, unique)]]></comment>
+			</column>
+			<column name="LocationID" type="integer" jt="4" mandatory="y" >
+				<comment><![CDATA[Primary Key, Integer, Auto-increment]]></comment>
+			</column>
+			<index name="pk_HealthcareProvider" unique="PRIMARY_KEY" >
+				<column name="ProviderID" />
+			</index>
+			<fk name="fk_HealthcareProvider_ClinicalTrial" to_schema="diseasetransactionalmodel" to_table="ClinicalTrial" >
+				<fk_column name="ProviderID" pk="ProviderID" />
+			</fk>
+			<fk name="fk_HealthcareProvider_Location" to_schema="diseasetransactionalmodel" to_table="Location" >
+				<fk_column name="LocationID" pk="LocationID" />
+			</fk>
+		</table>
+		<table name="Location" prior="Tbl" >
+			<column name="LocationID" type="integer" jt="4" mandatory="y" >
+				<comment><![CDATA[Primary Key, Integer, Auto-increment]]></comment>
+			</column>
+			<column name="Country" type="varchar" jt="12" mandatory="y" >
+				<comment><![CDATA[(String, not null)]]></comment>
+			</column>
+			<column name="Region" type="varchar" jt="12" />
+			<column name="City" type="varchar" jt="12" />
+			<column name="Latitude" type="varchar" jt="12" />
+			<column name="Longitude" type="integer" jt="4" />
+			<index name="pk_Location" unique="PRIMARY_KEY" >
+				<column name="LocationID" />
+			</index>
+			<fk name="fk_Location_Patient" to_schema="diseasetransactionalmodel" to_table="Patient" >
+				<fk_column name="LocationID" pk="LocationID" />
+			</fk>
+		</table>
+		<table name="Medication" prior="Tbl" >
+			<column name="MedicationID" type="integer" jt="4" mandatory="y" >
+				<comment><![CDATA[(Primary Key, Integer, Auto-increment)]]></comment>
+			</column>
+			<column name="Name" type="varchar" length="100" jt="12" mandatory="y" >
+				<comment><![CDATA[(String, not null)]]></comment>
+			</column>
+			<column name="Manufacturer" type="varchar" jt="12" />
+			<column name="DosageInformation" type="varchar" jt="12" />
+			<column name="SideEffects" type="varchar" jt="12" />
+			<column name="ApprovalStatus" type="varchar" jt="12" >
+				<comment><![CDATA[String, e.g., approved, under trial]]></comment>
+			</column>
+			<column name="ClinicalTrialID" type="integer" jt="4" mandatory="y" />
+			<index name="pk_Medication" unique="PRIMARY_KEY" >
+				<column name="MedicationID" />
+			</index>
+			<fk name="fk_Medication_ClinicalTrial" to_schema="diseasetransactionalmodel" to_table="ClinicalTrial" >
+				<fk_column name="ClinicalTrialID" pk="ClinicalTrialID" />
+			</fk>
+		</table>
+		<table name="Patient" prior="Tbl" >
+			<column name="PatientID" type="integer" jt="4" mandatory="y" >
+				<comment><![CDATA[(Primary Key, Integer, Auto-increment)]]></comment>
+			</column>
+			<column name="FirstName" type="varchar" length="100" jt="12" mandatory="y" >
+				<comment><![CDATA[(String, not null)]]></comment>
+			</column>
+			<column name="LastName" type="varchar" length="100" jt="12" mandatory="y" >
+				<comment><![CDATA[(String, not null)]]></comment>
+			</column>
+			<column name="Gender" type="varchar" jt="12" />
+			<column name="DateOfBirth" type="date" jt="91" />
+			<column name="Residence" prior="re" type="varchar" jt="12" >
+				<comment><![CDATA[(Foreign Key, references Location.location)]]></comment>
+			</column>
+			<column name="DateOfDiagnosis" type="date" jt="91" />
+			<column name="DateOfRecovery" type="date" jt="91" />
+			<column name="Status" type="varchar" jt="12" >
+				<comment><![CDATA[String, e.g., In treatment, Recovered, Deceased]]></comment>
+			</column>
+			<column name="LocationID" type="integer" jt="4" mandatory="y" >
+				<comment><![CDATA[Primary Key, Integer, Auto-increment]]></comment>
+			</column>
+			<index name="pk_Patient" unique="PRIMARY_KEY" >
+				<column name="PatientID" />
+			</index>
+			<index name="unq_Patient_LocationID" unique="UNIQUE_KEY" >
+				<column name="LocationID" />
+			</index>
+		</table>
+		<table name="RiskFactor" prior="Tbl" >
+			<column name="RiskFactorID" type="integer" jt="4" mandatory="y" >
+				<comment><![CDATA[(Primary Key, Integer, Auto-increment)]]></comment>
+			</column>
+			<column name="Name" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="Description" type="varchar" jt="12" />
+			<column name="PatientID" type="integer" jt="4" mandatory="y" >
+				<comment><![CDATA[(Primary Key, Integer, Auto-increment)]]></comment>
+			</column>
+			<index name="pk_RiskFactor" unique="PRIMARY_KEY" >
+				<column name="RiskFactorID" />
+			</index>
+			<fk name="fk_RiskFactor_Patient" to_schema="diseasetransactionalmodel" to_table="Patient" >
+				<fk_column name="PatientID" pk="PatientID" />
+			</fk>
+		</table>
+		<table name="Symptom" prior=" Symptom" >
+			<column name="SymptomID" type="integer" jt="4" mandatory="y" >
+				<comment><![CDATA[Primary Key, Integer, Auto-increment]]></comment>
+			</column>
+			<column name="Name" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="Description" type="varchar" jt="12" />
+			<column name="DiseaseID" type="integer" jt="4" mandatory="y" >
+				<comment><![CDATA[(Primary Key, Integer, Auto-increment)]]></comment>
+			</column>
+			<index name="pk_ Symptom" unique="PRIMARY_KEY" >
+				<column name="SymptomID" />
+			</index>
+			<index name="unq_Symptom_DiseaseID" unique="UNIQUE_KEY" >
+				<column name="DiseaseID" />
+			</index>
+		</table>
+	</schema>
+	<layout name="Default Layout" id="Layout-253a" show_relation="columns" >
+		<entity schema="diseasetransactionalmodel" name="ClinicalTrial" color="C1D8EE" x="391" y="459" />
+		<entity schema="diseasetransactionalmodel" name="Disease" color="C1D8EE" x="51" y="476" />
+		<entity schema="diseasetransactionalmodel" name="HealthcareProvider" color="C1D8EE" x="714" y="204" />
+		<entity schema="diseasetransactionalmodel" name="Location" color="C1D8EE" x="323" y="221" />
+		<entity schema="diseasetransactionalmodel" name="Medication" color="C1D8EE" x="663" y="510" />
+		<entity schema="diseasetransactionalmodel" name="Patient" color="C1D8EE" x="68" y="170" >
+			<column name="PatientID" />
+			<column name="FirstName" />
+			<column name="LastName" />
+			<column name="Gender" />
+			<column name="DateOfBirth" />
+			<column name="DateOfDiagnosis" />
+			<column name="DateOfRecovery" />
+			<column name="Status" />
+			<column name="LocationID" />
+		</entity>
+		<entity schema="diseasetransactionalmodel" name="RiskFactor" color="C1D8EE" x="595" y="51" />
+		<entity schema="diseasetransactionalmodel" name="Symptom" color="3986C1" x="238" y="748" />
+	</layout>
+</project>

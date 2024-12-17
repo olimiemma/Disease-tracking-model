@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="PostgreSQL" database="PostgreSQL" id="PostgreSQL-4c8" >
+	<schema name="public" >
+		<comment><![CDATA[standard public schema]]></comment>
+		<table name="case_record" row_count="0" spec="" >
+			<column name="caseid" type="serial" length="32" jt="4" mandatory="y" />
+			<column name="patientid" type="integer" length="32" jt="4" />
+			<column name="diseaseid" type="integer" length="32" jt="4" />
+			<column name="variantid" type="integer" length="32" jt="4" />
+			<column name="diagnosisdate" type="date" length="0" jt="91" />
+			<column name="severity" type="varchar" length="50" jt="12" />
+			<column name="symptoms" type="text" jt="12" />
+			<column name="treatment" type="text" jt="12" />
+			<column name="outcome" type="varchar" length="50" jt="12" />
+			<column name="dischargedate" type="date" length="0" jt="91" />
+			<column name="facilityid" type="integer" length="32" jt="4" />
+			<column name="providerid" type="integer" length="32" jt="4" />
+			<column name="created_at" type="timestamp" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<index name="case_record_pkey" unique="PRIMARY_KEY" >
+				<column name="caseid" />
+			</index>
+			<index name="idx_case_disease" unique="NORMAL" spec="USING  btree" >
+				<column name="diseaseid" />
+			</index>
+			<fk name="case_record_patientid_fkey" to_schema="public" to_table="patient" options="" >
+				<fk_column name="patientid" pk="patientid" />
+			</fk>
+			<fk name="case_record_diseaseid_fkey" to_schema="public" to_table="disease" options="" >
+				<fk_column name="diseaseid" pk="diseaseid" />
+			</fk>
+			<fk name="case_record_variantid_fkey" to_schema="public" to_table="disease_variant" options="" >
+				<fk_column name="variantid" pk="variantid" />
+			</fk>
+			<fk name="case_record_facilityid_fkey" to_schema="public" to_table="healthcare_facility" options="" >
+				<fk_column name="facilityid" pk="facilityid" />
+			</fk>
+			<fk name="case_record_providerid_fkey" to_schema="public" to_table="healthcare_provider" options="" >
+				<fk_column name="providerid" pk="providerid" />
+			</fk>
+		</table>
+		<table name="disease" row_count="0" spec="" >
+			<column name="diseaseid" type="serial" length="32" jt="4" mandatory="y" />
+			<column name="name" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="classification" type="varchar" length="100" jt="12" />
+			<column name="description" type="text" jt="12" />
+			<column name="iscommunicable" type="boolean" jt="16" />
+			<column name="symptoms" type="text" jt="12" />
+			<column name="transmissionmethod" type="text" jt="12" />
+			<column name="incubationperioddays" type="integer" length="32" jt="4" />
+			<column name="mortalityrate" type="numeric" length="5" decimal="2" jt="2" />
+			<column name="created_at" type="timestamp" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<index name="disease_pkey" unique="PRIMARY_KEY" >
+				<column name="diseaseid" />
+			</index>
+			<index name="idx_disease_name" unique="NORMAL" spec="USING  btree" >
+				<column name="name" />
+			</index>
+		</table>
+		<table name="disease_outbreak" row_count="0" spec="" >
+			<column name="outbreakid" type="serial" length="32" jt="4" mandatory="y" />
+			<column name="diseaseid" type="integer" length="32" jt="4" />
+			<column name="regionid" type="integer" length="32" jt="4" />
+			<column name="startdate" type="date" length="0" jt="91" />
+			<column name="enddate" type="date" length="0" jt="91" />
+			<column name="totalcases" type="integer" length="32" jt="4" />
+			<column name="status" type="varchar" length="50" jt="12" />
+			<column name="containmentmeasures" type="text" jt="12" />
+			<column name="notes" type="text" jt="12" />
+			<column name="created_at" type="timestamp" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<index name="disease_outbreak_pkey" unique="PRIMARY_KEY" >
+				<column name="outbreakid" />
+			</index>
+			<index name="idx_outbreak_disease" unique="NORMAL" spec="USING  btree" >
+				<column name="diseaseid" />
+			</index>
+			<index name="idx_outbreak_region" unique="NORMAL" spec="USING  btree" >
+				<column name="regionid" />
+			</index>
+			<fk name="disease_outbreak_diseaseid_fkey" to_schema="public" to_table="disease" options="" >
+				<fk_column name="diseaseid" pk="diseaseid" />
+			</fk>
+			<fk name="disease_outbreak_regionid_fkey" to_schema="public" to_table="region" options="" >
+				<fk_column name="regionid" pk="regionid" />
+			</fk>
+		</table>
+		<table name="disease_test" row_count="0" spec="" >
+			<column name="testid" type="serial" length="32" jt="4" mandatory="y" />
+			<column name="patientid" type="integer" length="32" jt="4" />
+			<column name="diseaseid" type="integer" length="32" jt="4" />
+			<column name="testdate" type="date" length="0" jt="91" mandatory="y" />
+			<column name="testtype" type="varchar" length="100" jt="12" />
+			<column name="result" type="varchar" length="20" jt="12" />
+			<column name="facilityid" type="integer" length="32" jt="4" />
+			<column name="providerid" type="integer" length="32" jt="4" />
+			<column name="notes" type="text" jt="12" />
+			<column name="created_at" type="timestamp" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<index name="disease_test_pkey" unique="PRIMARY_KEY" >
+				<column name="testid" />
+			</index>
+			<index name="idx_test_patient" unique="NORMAL" spec="USING  btree" >
+				<column name="patientid" />
+			</index>
+			<index name="idx_test_disease" unique="NORMAL" spec="USING  btree" >
+				<column name="diseaseid" />
+			</index>
+			<fk name="disease_test_patientid_fkey" to_schema="public" to_table="patient" options="" >
+				<fk_column name="patientid" pk="patientid" />
+			</fk>
+			<fk name="disease_test_diseaseid_fkey" to_schema="public" to_table="disease" options="" >
+				<fk_column name="diseaseid" pk="diseaseid" />
+			</fk>
+			<fk name="disease_test_facilityid_fkey" to_schema="public" to_table="healthcare_facility" options="" >
+				<fk_column name="facilityid" pk="facilityid" />
+			</fk>
+			<fk name="disease_test_providerid_fkey" to_schema="public" to_table="healthcare_provider" options="" >
+				<fk_column name="providerid" pk="providerid" />
+			</fk>
+		</table>
+		<table name="disease_variant" row_count="0" spec="" >
+			<column name="variantid" type="serial" length="32" jt="4" mandatory="y" />
+			<column name="diseaseid" type="integer" length="32" jt="4" />
+			<column name="name" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="firstidentified" type="date" length="0" jt="91" />
+			<column name="characteristics" type="text" jt="12" />
+			<column name="transmissionrate" type="numeric" length="4" decimal="2" jt="2" />
+			<column name="severity" type="varchar" length="50" jt="12" />
+			<column name="dominantregion" type="integer" length="32" jt="4" />
+			<column name="created_at" type="timestamp" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<index name="disease_variant_pkey" unique="PRIMARY_KEY" >
+				<column name="variantid" />
+			</index>
+			<fk name="disease_variant_diseaseid_fkey" to_schema="public" to_table="disease" options="" >
+				<fk_column name="diseaseid" pk="diseaseid" />
+			</fk>
+		</table>
+		<table name="healthcare_facility" row_count="0" spec="" >
+			<column name="facilityid" type="serial" length="32" jt="4" mandatory="y" />
+			<column name="name" type="varchar" length="200" jt="12" mandatory="y" />
+			<column name="regionid" type="integer" length="32" jt="4" />
+			<column name="facilitytype" type="varchar" length="50" jt="12" />
+			<column name="bedcapacity" type="integer" length="32" jt="4" />
+			<column name="icucapacity" type="integer" length="32" jt="4" />
+			<column name="hasemergencyroom" type="boolean" jt="16" />
+			<column name="specialtyunits" type="text" jt="12" />
+			<column name="created_at" type="timestamp" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<index name="healthcare_facility_pkey" unique="PRIMARY_KEY" >
+				<column name="facilityid" />
+			</index>
+			<index name="idx_facility_region" unique="NORMAL" spec="USING  btree" >
+				<column name="regionid" />
+			</index>
+			<fk name="healthcare_facility_regionid_fkey" to_schema="public" to_table="region" options="" >
+				<fk_column name="regionid" pk="regionid" />
+			</fk>
+		</table>
+		<table name="healthcare_provider" row_count="0" spec="" >
+			<column name="providerid" type="serial" length="32" jt="4" mandatory="y" />
+			<column name="firstname" type="varchar" length="50" jt="12" mandatory="y" />
+			<column name="lastname" type="varchar" length="50" jt="12" mandatory="y" />
+			<column name="specialty" type="varchar" length="100" jt="12" />
+			<column name="licensenumber" type="varchar" length="50" jt="12" />
+			<column name="facilityid" type="integer" length="32" jt="4" />
+			<column name="contactinfo" type="text" jt="12" />
+			<column name="created_at" type="timestamp" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<index name="healthcare_provider_pkey" unique="PRIMARY_KEY" >
+				<column name="providerid" />
+			</index>
+			<index name="healthcare_provider_licensenumber_key" unique="UNIQUE_KEY" >
+				<column name="licensenumber" />
+			</index>
+			<fk name="healthcare_provider_facilityid_fkey" to_schema="public" to_table="healthcare_facility" options="" >
+				<fk_column name="facilityid" pk="facilityid" />
+			</fk>
+		</table>
+		<table name="patient" row_count="0" spec="" >
+			<column name="patientid" type="serial" length="32" jt="4" mandatory="y" />
+			<column name="firstname" type="varchar" length="50" jt="12" mandatory="y" />
+			<column name="lastname" type="varchar" length="50" jt="12" mandatory="y" />
+			<column name="dateofbirth" type="date" length="0" jt="91" mandatory="y" />
+			<column name="gender" type="varchar" length="20" jt="12" />
+			<column name="bloodtype" type="varchar" length="5" jt="12" />
+			<column name="regionid" type="integer" length="32" jt="4" />
+			<column name="contactnumber" type="varchar" length="20" jt="12" />
+			<column name="emailaddress" type="varchar" length="100" jt="12" />
+			<column name="medicalhistory" type="text" jt="12" />
+			<column name="created_at" type="timestamp" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<index name="patient_pkey" unique="PRIMARY_KEY" >
+				<column name="patientid" />
+			</index>
+			<index name="idx_patient_region" unique="NORMAL" spec="USING  btree" >
+				<column name="regionid" />
+			</index>
+			<fk name="patient_regionid_fkey" to_schema="public" to_table="region" options="" >
+				<fk_column name="regionid" pk="regionid" />
+			</fk>
+		</table>
+		<table name="region" row_count="0" spec="" >
+			<column name="regionid" type="serial" length="32" jt="4" mandatory="y" />
+			<column name="name" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="country" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="state" type="varchar" length="100" jt="12" />
+			<column name="city" type="varchar" length="100" jt="12" />
+			<column name="latitude" type="numeric" length="10" decimal="6" jt="2" />
+			<column name="longitude" type="numeric" length="10" decimal="6" jt="2" />
+			<column name="population" type="integer" length="32" jt="4" />
+			<column name="created_at" type="timestamp" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<index name="region_pkey" unique="PRIMARY_KEY" >
+				<column name="regionid" />
+			</index>
+		</table>
+		<table name="resource_inventory" row_count="0" spec="" >
+			<column name="inventoryid" type="serial" length="32" jt="4" mandatory="y" />
+			<column name="facilityid" type="integer" length="32" jt="4" />
+			<column name="resourcetype" type="varchar" length="100" jt="12" />
+			<column name="quantity" type="integer" length="32" jt="4" />
+			<column name="minimumthreshold" type="integer" length="32" jt="4" />
+			<column name="lastrestocked" type="date" length="0" jt="91" />
+			<column name="expirydate" type="date" length="0" jt="91" />
+			<column name="notes" type="text" jt="12" />
+			<column name="created_at" type="timestamp" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<index name="resource_inventory_pkey" unique="PRIMARY_KEY" >
+				<column name="inventoryid" />
+			</index>
+			<fk name="resource_inventory_facilityid_fkey" to_schema="public" to_table="healthcare_facility" options="" >
+				<fk_column name="facilityid" pk="facilityid" />
+			</fk>
+		</table>
+		<table name="treatment_protocol" row_count="0" spec="" >
+			<column name="protocolid" type="serial" length="32" jt="4" mandatory="y" />
+			<column name="diseaseid" type="integer" length="32" jt="4" />
+			<column name="name" type="varchar" length="200" jt="12" />
+			<column name="description" type="text" jt="12" />
+			<column name="medications" type="text" jt="12" />
+			<column name="procedures" type="text" jt="12" />
+			<column name="effectivedate" type="date" length="0" jt="91" />
+			<column name="status" type="varchar" length="50" jt="12" />
+			<column name="created_at" type="timestamp" jt="93" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+			</column>
+			<index name="treatment_protocol_pkey" unique="PRIMARY_KEY" >
+				<column name="protocolid" />
+			</index>
+			<fk name="treatment_protocol_diseaseid_fkey" to_schema="public" to_table="disease" options="" >
+				<fk_column name="diseaseid" pk="diseaseid" />
+			</fk>
+		</table>
+		<sequence name="case_record_caseid_seq" options="AS integer START WITH 1 INCREMENT BY 1" />
+		<sequence name="disease_diseaseid_seq" options="AS integer START WITH 1 INCREMENT BY 1" />
+		<sequence name="disease_outbreak_outbreakid_seq" options="AS integer START WITH 1 INCREMENT BY 1" />
+		<sequence name="disease_test_testid_seq" options="AS integer START WITH 1 INCREMENT BY 1" />
+		<sequence name="disease_variant_variantid_seq" options="AS integer START WITH 1 INCREMENT BY 1" />
+		<sequence name="healthcare_facility_facilityid_seq" options="AS integer START WITH 1 INCREMENT BY 1" />
+		<sequence name="healthcare_provider_providerid_seq" options="AS integer START WITH 1 INCREMENT BY 1" />
+		<sequence name="patient_patientid_seq" options="AS integer START WITH 1 INCREMENT BY 1" />
+		<sequence name="region_regionid_seq" options="AS integer START WITH 1 INCREMENT BY 1" />
+		<sequence name="resource_inventory_inventoryid_seq" options="AS integer START WITH 1 INCREMENT BY 1" />
+		<sequence name="treatment_protocol_protocolid_seq" options="AS integer START WITH 1 INCREMENT BY 1" />
+	</schema>
+	<layout name="Main Layout" id="Layout-17a8" show_relation="columns" >
+		<comment><![CDATA[Main Layout]]></comment>
+		<entity schema="public" name="case_record" color="C7F4BE" x="1734" y="85" />
+		<entity schema="public" name="disease" color="C7F4BE" x="1428" y="85" />
+		<entity schema="public" name="disease_outbreak" color="BED3F4" x="561" y="697" />
+		<entity schema="public" name="disease_test" color="BED3F4" x="629" y="85" />
+		<entity schema="public" name="disease_variant" color="C7F4BE" x="1428" y="408" />
+		<entity schema="public" name="healthcare_facility" color="BED3F4" x="340" y="85" />
+		<entity schema="public" name="healthcare_provider" color="BED3F4" x="51" y="391" />
+		<entity schema="public" name="patient" color="BED3F4" x="850" y="85" />
+		<entity schema="public" name="region" color="BED3F4" x="340" y="391" />
+		<entity schema="public" name="resource_inventory" color="BED3F4" x="51" y="85" />
+		<entity schema="public" name="treatment_protocol" color="C7F4BE" x="1139" y="408" />
+		<group name="disease" color="EEF7EC" >
+			<entity schema="public" name="disease" />
+			<entity schema="public" name="treatment_protocol" />
+			<entity schema="public" name="disease_variant" />
+			<entity schema="public" name="case_record" />
+		</group>
+		<group name="region" color="ECF0F7" >
+			<entity schema="public" name="region" />
+			<entity schema="public" name="resource_inventory" />
+			<entity schema="public" name="healthcare_facility" />
+			<entity schema="public" name="healthcare_provider" />
+			<entity schema="public" name="patient" />
+			<entity schema="public" name="disease_outbreak" />
+			<entity schema="public" name="disease_test" />
+		</group>
+	</layout>
+	<layout name="~Layout with Sample Tools" id="Layout-15d6" show_column_type="y" show_relation="columns" >
+		<entity schema="public" name="case_record" color="C7F4BE" x="2006" y="51" />
+		<entity schema="public" name="disease" color="C7F4BE" x="1666" y="51" />
+		<entity schema="public" name="disease_outbreak" color="BED3F4" x="680" y="663" />
+		<entity schema="public" name="disease_test" color="BED3F4" x="714" y="51" />
+		<entity schema="public" name="disease_variant" color="C7F4BE" x="1649" y="374" />
+		<entity schema="public" name="healthcare_facility" color="BED3F4" x="374" y="51" />
+		<entity schema="public" name="healthcare_provider" color="BED3F4" x="51" y="357" />
+		<entity schema="public" name="patient" color="BED3F4" x="1003" y="51" />
+		<entity schema="public" name="region" color="BED3F4" x="374" y="357" />
+		<entity schema="public" name="resource_inventory" color="BED3F4" x="51" y="51" />
+		<entity schema="public" name="treatment_protocol" color="C7F4BE" x="1377" y="68" />
+		<script name="SQL Editor" id="Editor-1299" language="SQL" >
+			<string><![CDATA[SELECT
+	caseid, patientid, diseaseid, variantid, diagnosisdate, severity, symptoms, treatment, outcome, dischargedate, facilityid, 
+	providerid, created_at
+FROM
+	"public".case_record d;]]></string>
+		</script>
+		<browser id="Browse-1435" name="Relational Data Explorer" confirm_updates="y" >
+			<browse_table schema="public" entity="case_record" x="20" y="20" width="270" height="-60" >
+				<browse_table schema="public" entity="disease" fk="case_record_diseaseid_fkey" x="310" y="20" width="500" height="350" record_view="y" >
+					<browse_table schema="public" entity="disease_variant" fk="disease_variant_diseaseid_fkey" x="830" y="20" width="500" height="350" />
+				</browse_table>
+			</browse_table>
+		</browser>
+		<query id="Query-9ad" name="Query Builder" >
+			<query_table schema="public" name="case_record" alias="cr" x="51" y="51" >
+				<column name="caseid" />
+				<column name="patientid" />
+				<column name="diseaseid" />
+				<column name="variantid" />
+				<column name="diagnosisdate" />
+				<column name="severity" />
+				<column name="symptoms" />
+				<column name="treatment" />
+				<column name="outcome" />
+				<column name="dischargedate" />
+				<column name="facilityid" />
+				<column name="providerid" />
+				<column name="created_at" />
+				<query_table schema="public" name="disease" alias="d" x="306" y="51" fk="case_record_diseaseid_fkey" type="Inner Join" >
+					<column name="diseaseid" />
+					<column name="name" />
+					<column name="classification" />
+					<column name="description" />
+					<column name="iscommunicable" />
+					<column name="symptoms" />
+					<column name="transmissionmethod" />
+					<column name="incubationperioddays" />
+					<column name="mortalityrate" />
+					<column name="created_at" />
+					<query_table schema="public" name="disease_variant" alias="dv" x="612" y="51" fk="disease_variant_diseaseid_fkey" type="Inner Join" >
+						<column name="variantid" />
+						<column name="diseaseid" />
+						<column name="name" />
+						<column name="firstidentified" />
+						<column name="characteristics" />
+						<column name="transmissionrate" />
+						<column name="severity" />
+						<column name="dominantregion" />
+						<column name="created_at" />
+					</query_table>
+				</query_table>
+			</query_table>
+		</query>
+	</layout>
+</project>
