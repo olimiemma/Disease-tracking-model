@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="PostgreSQL" database="PostgreSQL" id="PostgreSQL-41b" >
+	<schema name="disease_dw" >
+		<table name="dimdate" row_count="2192" spec="" >
+			<column name="datekey" type="integer" length="32" jt="4" mandatory="y" />
+			<column name="fulldate" type="date" length="0" jt="91" mandatory="y" />
+			<column name="year" type="integer" length="32" jt="4" mandatory="y" />
+			<column name="quarter" type="integer" length="32" jt="4" mandatory="y" />
+			<column name="month" type="integer" length="32" jt="4" mandatory="y" />
+			<column name="monthname" type="varchar" length="10" jt="12" mandatory="y" />
+			<column name="week" type="integer" length="32" jt="4" mandatory="y" />
+			<column name="dayofweek" type="integer" length="32" jt="4" mandatory="y" />
+			<column name="isweekend" type="boolean" jt="16" mandatory="y" />
+			<column name="season" type="varchar" length="10" jt="12" />
+			<index name="dimdate_pkey" unique="PRIMARY_KEY" >
+				<column name="datekey" />
+			</index>
+			<index name="valid_date" unique="UNIQUE_KEY" >
+				<column name="fulldate" />
+			</index>
+		</table>
+		<table name="dimdisease" row_count="0" spec="" >
+			<column name="diseasekey" type="integer" length="32" jt="4" mandatory="y" >
+				<defo><![CDATA[nextval('disease_dw.dimdisease_diseasekey_seq'::regclass)]]></defo>
+			</column>
+			<column name="diseaseid" type="integer" length="32" jt="4" mandatory="y" />
+			<column name="diseasename" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="classification" type="varchar" length="100" jt="12" />
+			<column name="iscommunicable" type="boolean" jt="16" />
+			<column name="variantname" type="varchar" length="100" jt="12" />
+			<column name="variantseverity" type="varchar" length="50" jt="12" />
+			<column name="startdate" type="date" length="0" jt="91" mandatory="y" />
+			<column name="enddate" type="date" length="0" jt="91" />
+			<column name="iscurrent" type="boolean" jt="16" >
+				<defo><![CDATA[true]]></defo>
+			</column>
+			<index name="dimdisease_pkey" unique="PRIMARY_KEY" >
+				<column name="diseasekey" />
+			</index>
+			<index name="disease_version" unique="UNIQUE_KEY" >
+				<column name="diseaseid" />
+				<column name="startdate" />
+			</index>
+		</table>
+		<table name="dimfacility" row_count="0" spec="" >
+			<column name="facilitykey" type="integer" length="32" jt="4" mandatory="y" >
+				<defo><![CDATA[nextval('disease_dw.dimfacility_facilitykey_seq'::regclass)]]></defo>
+			</column>
+			<column name="facilityid" type="integer" length="32" jt="4" mandatory="y" />
+			<column name="facilityname" type="varchar" length="200" jt="12" />
+			<column name="facilitytype" type="varchar" length="50" jt="12" />
+			<column name="capacity" type="integer" length="32" jt="4" />
+			<column name="hasemergencyroom" type="boolean" jt="16" />
+			<column name="startdate" type="date" length="0" jt="91" mandatory="y" />
+			<column name="enddate" type="date" length="0" jt="91" />
+			<column name="iscurrent" type="boolean" jt="16" >
+				<defo><![CDATA[true]]></defo>
+			</column>
+			<index name="dimfacility_pkey" unique="PRIMARY_KEY" >
+				<column name="facilitykey" />
+			</index>
+			<index name="facility_version" unique="UNIQUE_KEY" >
+				<column name="facilityid" />
+				<column name="startdate" />
+			</index>
+		</table>
+		<table name="dimlocation" row_count="0" spec="" >
+			<column name="locationkey" type="integer" length="32" jt="4" mandatory="y" >
+				<defo><![CDATA[nextval('disease_dw.dimlocation_locationkey_seq'::regclass)]]></defo>
+			</column>
+			<column name="regionid" type="integer" length="32" jt="4" mandatory="y" />
+			<column name="country" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="state" type="varchar" length="100" jt="12" />
+			<column name="city" type="varchar" length="100" jt="12" />
+			<column name="population" type="integer" length="32" jt="4" />
+			<column name="populationdensity" type="numeric" length="10" decimal="2" jt="2" />
+			<column name="startdate" type="date" length="0" jt="91" mandatory="y" />
+			<column name="enddate" type="date" length="0" jt="91" />
+			<column name="iscurrent" type="boolean" jt="16" >
+				<defo><![CDATA[true]]></defo>
+			</column>
+			<index name="dimlocation_pkey" unique="PRIMARY_KEY" >
+				<column name="locationkey" />
+			</index>
+			<index name="location_version" unique="UNIQUE_KEY" >
+				<column name="regionid" />
+				<column name="startdate" />
+			</index>
+		</table>
+		<table name="dimpatient" row_count="1000" spec="" >
+			<column name="patientkey" type="integer" length="32" jt="4" mandatory="y" >
+				<defo><![CDATA[nextval('disease_dw.dimpatient_patientkey_seq'::regclass)]]></defo>
+			</column>
+			<column name="patientid" type="integer" length="32" jt="4" mandatory="y" />
+			<column name="firstname" type="varchar" length="50" jt="12" />
+			<column name="lastname" type="varchar" length="50" jt="12" />
+			<column name="dateofbirth" type="date" length="0" jt="91" />
+			<column name="gender" type="varchar" length="20" jt="12" />
+			<column name="bloodtype" type="varchar" length="5" jt="12" />
+			<column name="agegroup" type="varchar" length="20" jt="12" />
+			<column name="riskcategory" type="varchar" length="20" jt="12" />
+			<column name="startdate" type="date" length="0" jt="91" mandatory="y" />
+			<column name="enddate" type="date" length="0" jt="91" />
+			<column name="iscurrent" type="boolean" jt="16" >
+				<defo><![CDATA[true]]></defo>
+			</column>
+			<index name="dimpatient_pkey" unique="PRIMARY_KEY" >
+				<column name="patientkey" />
+			</index>
+			<index name="patient_version" unique="UNIQUE_KEY" >
+				<column name="patientid" />
+				<column name="startdate" />
+			</index>
+		</table>
+		<table name="dimprovider" row_count="0" spec="" >
+			<column name="providerkey" type="integer" length="32" jt="4" mandatory="y" >
+				<defo><![CDATA[nextval('disease_dw.dimprovider_providerkey_seq'::regclass)]]></defo>
+			</column>
+			<column name="providerid" type="integer" length="32" jt="4" mandatory="y" />
+			<column name="fullname" type="varchar" length="100" jt="12" />
+			<column name="specialty" type="varchar" length="100" jt="12" />
+			<column name="yearsofexperience" type="integer" length="32" jt="4" />
+			<column name="isactive" type="boolean" jt="16" />
+			<column name="startdate" type="date" length="0" jt="91" mandatory="y" />
+			<column name="enddate" type="date" length="0" jt="91" />
+			<column name="iscurrent" type="boolean" jt="16" >
+				<defo><![CDATA[true]]></defo>
+			</column>
+			<index name="dimprovider_pkey" unique="PRIMARY_KEY" >
+				<column name="providerkey" />
+			</index>
+			<index name="provider_version" unique="UNIQUE_KEY" >
+				<column name="providerid" />
+				<column name="startdate" />
+			</index>
+		</table>
+		<table name="factcases" row_count="0" spec="" >
+			<column name="casekey" type="integer" length="32" jt="4" mandatory="y" >
+				<defo><![CDATA[nextval('disease_dw.factcases_casekey_seq'::regclass)]]></defo>
+			</column>
+			<column name="patientkey" type="integer" length="32" jt="4" />
+			<column name="diseasekey" type="integer" length="32" jt="4" />
+			<column name="locationkey" type="integer" length="32" jt="4" />
+			<column name="datekey" type="integer" length="32" jt="4" />
+			<column name="providerkey" type="integer" length="32" jt="4" />
+			<column name="facilitykey" type="integer" length="32" jt="4" />
+			<column name="severity" type="varchar" length="50" jt="12" />
+			<column name="lengthofstay" type="integer" length="32" jt="4" />
+			<column name="outcome" type="varchar" length="50" jt="12" />
+			<column name="treatmentcost" type="numeric" length="10" decimal="2" jt="2" />
+			<index name="factcases_pkey" unique="PRIMARY_KEY" >
+				<column name="casekey" />
+			</index>
+			<index name="idx_factcases_date" unique="NORMAL" spec="USING  btree" >
+				<column name="datekey" />
+			</index>
+			<fk name="factcases_facilitykey_fkey" to_schema="disease_dw" to_table="dimfacility" options="" >
+				<fk_column name="facilitykey" pk="facilitykey" />
+			</fk>
+			<fk name="factcases_providerkey_fkey" to_schema="disease_dw" to_table="dimprovider" options="" >
+				<fk_column name="providerkey" pk="providerkey" />
+			</fk>
+			<fk name="factcases_datekey_fkey" to_schema="disease_dw" to_table="dimdate" options="" >
+				<fk_column name="datekey" pk="datekey" />
+			</fk>
+			<fk name="factcases_locationkey_fkey" to_schema="disease_dw" to_table="dimlocation" options="" >
+				<fk_column name="locationkey" pk="locationkey" />
+			</fk>
+			<fk name="factcases_diseasekey_fkey" to_schema="disease_dw" to_table="dimdisease" options="" >
+				<fk_column name="diseasekey" pk="diseasekey" />
+			</fk>
+			<fk name="factcases_patientkey_fkey" to_schema="disease_dw" to_table="dimpatient" options="" >
+				<fk_column name="patientkey" pk="patientkey" />
+			</fk>
+		</table>
+		<table name="factinventory" row_count="0" spec="" >
+			<column name="inventorykey" type="integer" length="32" jt="4" mandatory="y" >
+				<defo><![CDATA[nextval('disease_dw.factinventory_inventorykey_seq'::regclass)]]></defo>
+			</column>
+			<column name="facilitykey" type="integer" length="32" jt="4" />
+			<column name="datekey" type="integer" length="32" jt="4" />
+			<column name="resourcetype" type="varchar" length="100" jt="12" />
+			<column name="quantity" type="integer" length="32" jt="4" />
+			<column name="value" type="numeric" length="10" decimal="2" jt="2" />
+			<column name="daysofsupply" type="integer" length="32" jt="4" />
+			<index name="factinventory_pkey" unique="PRIMARY_KEY" >
+				<column name="inventorykey" />
+			</index>
+			<index name="idx_factinventory_date" unique="NORMAL" spec="USING  btree" >
+				<column name="datekey" />
+			</index>
+			<fk name="factinventory_datekey_fkey" to_schema="disease_dw" to_table="dimdate" options="" >
+				<fk_column name="datekey" pk="datekey" />
+			</fk>
+			<fk name="factinventory_facilitykey_fkey" to_schema="disease_dw" to_table="dimfacility" options="" >
+				<fk_column name="facilitykey" pk="facilitykey" />
+			</fk>
+		</table>
+		<table name="factoutbreaks" row_count="0" spec="" >
+			<column name="outbreakkey" type="integer" length="32" jt="4" mandatory="y" >
+				<defo><![CDATA[nextval('disease_dw.factoutbreaks_outbreakkey_seq'::regclass)]]></defo>
+			</column>
+			<column name="diseasekey" type="integer" length="32" jt="4" />
+			<column name="locationkey" type="integer" length="32" jt="4" />
+			<column name="startdatekey" type="integer" length="32" jt="4" />
+			<column name="enddatekey" type="integer" length="32" jt="4" />
+			<column name="totalcases" type="integer" length="32" jt="4" />
+			<column name="mortalityrate" type="numeric" length="5" decimal="2" jt="2" />
+			<column name="economicimpact" type="numeric" length="15" decimal="2" jt="2" />
+			<index name="factoutbreaks_pkey" unique="PRIMARY_KEY" >
+				<column name="outbreakkey" />
+			</index>
+			<index name="idx_factoutbreaks_dates" unique="NORMAL" spec="USING  btree" >
+				<column name="startdatekey" />
+				<column name="enddatekey" />
+			</index>
+			<fk name="factoutbreaks_enddatekey_fkey" to_schema="disease_dw" to_table="dimdate" options="" >
+				<fk_column name="enddatekey" pk="datekey" />
+			</fk>
+			<fk name="factoutbreaks_startdatekey_fkey" to_schema="disease_dw" to_table="dimdate" options="" >
+				<fk_column name="startdatekey" pk="datekey" />
+			</fk>
+			<fk name="factoutbreaks_locationkey_fkey" to_schema="disease_dw" to_table="dimlocation" options="" >
+				<fk_column name="locationkey" pk="locationkey" />
+			</fk>
+			<fk name="factoutbreaks_diseasekey_fkey" to_schema="disease_dw" to_table="dimdisease" options="" >
+				<fk_column name="diseasekey" pk="diseasekey" />
+			</fk>
+		</table>
+		<table name="facttests" row_count="6270" spec="" >
+			<column name="testkey" type="integer" length="32" jt="4" mandatory="y" >
+				<defo><![CDATA[nextval('disease_dw.facttests_testkey_seq'::regclass)]]></defo>
+			</column>
+			<column name="patientkey" type="integer" length="32" jt="4" />
+			<column name="diseasekey" type="integer" length="32" jt="4" />
+			<column name="locationkey" type="integer" length="32" jt="4" />
+			<column name="datekey" type="integer" length="32" jt="4" />
+			<column name="providerkey" type="integer" length="32" jt="4" />
+			<column name="facilitykey" type="integer" length="32" jt="4" />
+			<column name="testtype" type="varchar" length="100" jt="12" />
+			<column name="result" type="varchar" length="20" jt="12" />
+			<column name="testcost" type="numeric" length="10" decimal="2" jt="2" />
+			<index name="facttests_pkey" unique="PRIMARY_KEY" >
+				<column name="testkey" />
+			</index>
+			<index name="idx_facttests_date" unique="NORMAL" spec="USING  btree" >
+				<column name="datekey" />
+			</index>
+			<fk name="facttests_facilitykey_fkey" to_schema="disease_dw" to_table="dimfacility" options="" >
+				<fk_column name="facilitykey" pk="facilitykey" />
+			</fk>
+			<fk name="facttests_providerkey_fkey" to_schema="disease_dw" to_table="dimprovider" options="" >
+				<fk_column name="providerkey" pk="providerkey" />
+			</fk>
+			<fk name="facttests_datekey_fkey" to_schema="disease_dw" to_table="dimdate" options="" >
+				<fk_column name="datekey" pk="datekey" />
+			</fk>
+			<fk name="facttests_locationkey_fkey" to_schema="disease_dw" to_table="dimlocation" options="" >
+				<fk_column name="locationkey" pk="locationkey" />
+			</fk>
+			<fk name="facttests_diseasekey_fkey" to_schema="disease_dw" to_table="dimdisease" options="" >
+				<fk_column name="diseasekey" pk="diseasekey" />
+			</fk>
+			<fk name="facttests_patientkey_fkey" to_schema="disease_dw" to_table="dimpatient" options="" >
+				<fk_column name="patientkey" pk="patientkey" />
+			</fk>
+		</table>
+		<sequence name="dimdisease_diseasekey_seq" options="AS integer START WITH 1 INCREMENT BY 1" />
+		<sequence name="dimfacility_facilitykey_seq" options="AS integer START WITH 1 INCREMENT BY 1" />
+		<sequence name="dimlocation_locationkey_seq" options="AS integer START WITH 1 INCREMENT BY 1" />
+		<sequence name="dimpatient_patientkey_seq" options="AS integer START WITH 1 INCREMENT BY 1" />
+		<sequence name="dimprovider_providerkey_seq" options="AS integer START WITH 1 INCREMENT BY 1" />
+		<sequence name="factcases_casekey_seq" options="AS integer START WITH 1 INCREMENT BY 1" />
+		<sequence name="factinventory_inventorykey_seq" options="AS integer START WITH 1 INCREMENT BY 1" />
+		<sequence name="factoutbreaks_outbreakkey_seq" options="AS integer START WITH 1 INCREMENT BY 1" />
+		<sequence name="factpatienttests_patienttestkey_seq" options="AS integer START WITH 1 INCREMENT BY 1" />
+		<sequence name="facttests_testkey_seq" options="AS integer START WITH 1 INCREMENT BY 1" />
+	</schema>
+	<layout name="Main Layout" id="Layout-15b" show_relation="columns" >
+		<comment><![CDATA[ware house schema Main Layout]]></comment>
+		<entity schema="disease_dw" name="dimdate" color="BED3F4" x="306" y="408" />
+		<entity schema="disease_dw" name="dimdisease" color="BED3F4" x="816" y="748" />
+		<entity schema="disease_dw" name="dimfacility" color="BED3F4" x="816" y="408" />
+		<entity schema="disease_dw" name="dimlocation" color="BED3F4" x="272" y="85" />
+		<entity schema="disease_dw" name="dimpatient" color="C7F4BE" x="1411" y="425" />
+		<entity schema="disease_dw" name="dimprovider" color="C7F4BE" x="1122" y="425" />
+		<entity schema="disease_dw" name="factcases" color="C7F4BE" x="1411" y="85" />
+		<entity schema="disease_dw" name="factinventory" color="BED3F4" x="51" y="748" />
+		<entity schema="disease_dw" name="factoutbreaks" color="BED3F4" x="306" y="748" />
+		<entity schema="disease_dw" name="facttests" color="BED3F4" x="561" y="408" />
+		<group name="dimpatient" color="EEF7EC" >
+			<entity schema="disease_dw" name="dimpatient" />
+			<entity schema="disease_dw" name="dimprovider" />
+			<entity schema="disease_dw" name="factcases" />
+		</group>
+		<group name="dimfacility" color="ECF0F7" >
+			<entity schema="disease_dw" name="dimfacility" />
+			<entity schema="disease_dw" name="dimdate" />
+			<entity schema="disease_dw" name="dimlocation" />
+			<entity schema="disease_dw" name="dimdisease" />
+			<entity schema="disease_dw" name="factinventory" />
+			<entity schema="disease_dw" name="factoutbreaks" />
+			<entity schema="disease_dw" name="facttests" />
+		</group>
+	</layout>
+	<layout name="~Layout with Sample Tools" id="Layout-15df" show_column_type="y" show_relation="columns" >
+		<entity schema="disease_dw" name="dimdate" color="BED3F4" x="391" y="374" />
+		<entity schema="disease_dw" name="dimdisease" color="BED3F4" x="1020" y="714" />
+		<entity schema="disease_dw" name="dimfacility" color="BED3F4" x="1020" y="374" />
+		<entity schema="disease_dw" name="dimlocation" color="BED3F4" x="323" y="51" />
+		<entity schema="disease_dw" name="dimpatient" color="C7F4BE" x="1717" y="391" />
+		<entity schema="disease_dw" name="dimprovider" color="C7F4BE" x="1377" y="391" />
+		<entity schema="disease_dw" name="factcases" color="C7F4BE" x="1717" y="51" />
+		<entity schema="disease_dw" name="factinventory" color="BED3F4" x="51" y="714" />
+		<entity schema="disease_dw" name="factoutbreaks" color="BED3F4" x="391" y="714" />
+		<entity schema="disease_dw" name="facttests" color="BED3F4" x="697" y="374" />
+		<script name="SQL Editor" id="Editor-101" language="SQL" >
+			<string><![CDATA[SELECT
+	datekey, fulldate, "year", quarter, "month", monthname, week, dayofweek, isweekend, season
+FROM
+	disease_dw.dimdate e;]]></string>
+		</script>
+		<browser id="Browse-240c" name="Relational Data Explorer" confirm_updates="y" >
+			<browse_table schema="disease_dw" entity="dimdate" x="20" y="20" width="270" height="-60" >
+				<browse_table schema="disease_dw" entity="factcases" fk="factcases_datekey_fkey" x="310" y="20" width="500" height="350" >
+					<browse_table schema="disease_dw" entity="dimfacility" fk="factcases_facilitykey_fkey" x="830" y="20" width="500" height="350" record_view="y" />
+				</browse_table>
+			</browse_table>
+		</browser>
+		<query id="Query-137a" name="Query Builder" >
+			<query_table schema="disease_dw" name="dimdate" alias="d" x="51" y="51" >
+				<column name="datekey" />
+				<column name="fulldate" />
+				<column name="year" />
+				<column name="quarter" />
+				<column name="month" />
+				<column name="monthname" />
+				<column name="week" />
+				<column name="dayofweek" />
+				<column name="isweekend" />
+				<column name="season" />
+				<query_table schema="disease_dw" name="factcases" alias="f" x="272" y="51" fk="factcases_datekey_fkey" type="Inner Join" >
+					<column name="casekey" />
+					<column name="patientkey" />
+					<column name="diseasekey" />
+					<column name="locationkey" />
+					<column name="datekey" />
+					<column name="providerkey" />
+					<column name="facilitykey" />
+					<column name="severity" />
+					<column name="lengthofstay" />
+					<column name="outcome" />
+					<column name="treatmentcost" />
+					<query_table schema="disease_dw" name="dimfacility" alias="d1" x="510" y="51" fk="factcases_facilitykey_fkey" type="Inner Join" >
+						<column name="facilitykey" />
+						<column name="facilityid" />
+						<column name="facilityname" />
+						<column name="facilitytype" />
+						<column name="capacity" />
+						<column name="hasemergencyroom" />
+						<column name="startdate" />
+						<column name="enddate" />
+						<column name="iscurrent" />
+					</query_table>
+				</query_table>
+			</query_table>
+		</query>
+	</layout>
+</project>
